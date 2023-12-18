@@ -11,14 +11,16 @@ pipeline {
         pollSCM('*/5 * * * *') // Vérifier toutes les 5 minutes
     }
 
-    stage('Checkout'){
-        agent any
-        steps{
-            checkout scm
-        }   
-    }
-    
+   
     stages {
+
+        stage('Checkout'){
+            agent any
+            steps{
+                checkout scm
+            }   
+        }
+
         stage('Initialize') {
             steps {
                 echo 'Initializing...'
