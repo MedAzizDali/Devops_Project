@@ -6,6 +6,8 @@ const expect = chai.expect;
 chai.use(chaiHttp);
 
 describe('Authentication Service', () => {
+  let testsCompleted = 0; // Counter for completed tests
+
   it('should authenticate a valid email domain', (done) => {
     chai
       .request(app)
@@ -14,7 +16,14 @@ describe('Authentication Service', () => {
       .end((err, res) => {
         expect(res).to.have.status(200);
         expect(res.body.authenticated).to.be.true;
-        done();
+        testsCompleted++; // Increment completed tests count
+        if (testsCompleted === 2) {
+          // If all tests are completed, exit Mocha
+          done();
+          process.exit(0); // Exit Mocha
+        } else {
+          done();
+        }
       });
   });
 
@@ -26,7 +35,14 @@ describe('Authentication Service', () => {
       .end((err, res) => {
         expect(res).to.have.status(401); // Assuming a different status code for invalid domain
         expect(res.body.authenticated).to.be.false;
-        done();
+        testsCompleted++; // Increment completed tests count
+        if (testsCompleted === 2) {
+          // If all tests are completed, exit Mocha
+          done();
+          process.exit(0); // Exit Mocha
+        } else {
+          done();
+        }
       });
   });
 
