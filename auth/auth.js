@@ -17,11 +17,9 @@ const authenticate = (req, res) => {
 
 app.post('/auth', authenticate);
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`Authentication Service running on port ${port}`);
 });
 
-module.exports = { authenticate };
-
-
+module.exports = { app, server }; // Export the 'app' and 'server' for testing purposes
 

@@ -1,56 +1,33 @@
-// auth.test.js
 const chai = require('chai');
-const { authenticate } = require('./auth'); // Assuming 'auth.js' doesn't export the Express app
+const chaiHttp = require('chai-http');
+const { app } = require('./auth'); // Import the Express app
 
 const expect = chai.expect;
+chai.use(chaiHttp);
 
 describe('Authentication Service', () => {
-  it('should authenticate a valid email domain', () => {
-    // Simulate a request object with the necessary 'email' property
-    const req = { body: { email: 'test@example.com' } };
-    // Simulate a response object to capture the response
-    let responseStatus = null;
-    let responseBody = null;
-    const res = {
-      status: (status) => {
-        responseStatus = status;
-        return res;
-      },
-      json: (body) => {
-        responseBody = body;
-      }
-    };
-
-    // Call the authenticate function with the simulated request and response objects
-    authenticate(req, res);
-
-    // Assertions
-    expect(responseStatus).to.equal(200);
-    expect(responseBody.authenticated).to.be.true;
+  it('should authenticate a valid email domain', (done) => {
+    chai
+      .request(app)
+      .post('/auth')
+      .send({ email: 'test@example.com' })
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res.body.authenticated).to.be.true;
+        done();
+      });
   });
 
-  it('should reject an invalid email domain', () => {
-    // Simulate a request object with an invalid 'email' property
-    const req = { body: { email: 'invalid@example.org' } };
-    // Simulate a response object to capture the response
-    let responseStatus = null;
-    let responseBody = null;
-    const res = {
-      status: (status) => {
-        responseStatus = status;
-        return res;
-      },
-      json: (body) => {
-        responseBody = body;
-      }
-    };
-
-    // Call the authenticate function with the simulated request and response objects
-    authenticate(req, res);
-
-    // Assertions
-    expect(responseStatus).to.equal(200); // Assuming a different status code for invalid domain
-    expect(responseBody.authenticated).to.be.false;
+  it('should reject an invalid email domain', (done) => {
+    chai
+      .request(app)
+      .post('/auth')
+      .send({ email: 'invalid@example.org' })
+      .end((err, res) => {
+        expect(res).to.have.status(401); // Assuming a different status code for invalid domain
+        expect(res.body.authenticated).to.be.false;
+        done();
+      });
   });
 
   // Add more test cases for various scenarios
