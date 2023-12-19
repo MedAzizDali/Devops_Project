@@ -12,7 +12,12 @@ const authenticate = (req, res) => {
   const { email } = req.body;
   // Simulated authentication check
   const authenticated = email && email.endsWith('@example.com');
-  res.json({ authenticated });
+  
+  if (authenticated) {
+    res.status(200).json({ authenticated });
+  } else {
+    res.status(401).json({ authenticated });
+  }
 };
 
 app.post('/auth', authenticate);
@@ -21,5 +26,6 @@ const server = app.listen(port, () => {
   console.log(`Authentication Service running on port ${port}`);
 });
 
-module.exports = { app, server }; // Export the 'app' and 'server' for testing purposes
+module.exports = { app, server };
+
 
