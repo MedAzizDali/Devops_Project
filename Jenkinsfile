@@ -49,7 +49,7 @@ pipeline {
                         def DOCKER_IMAGE_NAME_2 = "azizdali/devops_project:auth" // Modify image name
                         docker.build(DOCKER_IMAGE_NAME_2, '-f Dockerfile .')
                         // Run tests for microservice 2
-                        
+                        sh 'npm install' // Modify for microservice 2
                         sh 'npm test' // Modify for microservice 2
                         // Push image to DockerHub for microservice 2
                         docker.withRegistry('https://registry.hub.docker.com', DOCKER_HUB_CREDENTIALS) {
