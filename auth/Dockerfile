@@ -10,7 +10,7 @@ COPY package*.json ./
 
 
 
-COPY auth.js ./
+COPY ./auth/auth.js ./
 
 
 EXPOSE 4000

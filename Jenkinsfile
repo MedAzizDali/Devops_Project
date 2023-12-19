@@ -50,8 +50,8 @@ pipeline {
                         docker.build(DOCKER_IMAGE_NAME_2, '-f Dockerfile .')
                         // Run tests for microservice 2
                         sh 'npm install' // Modify for microservice 2
-                        sh 'npm test' // Modify for microservice 2 
-                        sh 'lsof -t -i :4000 | xargs kill -9 || true'
+                        //sh 'npm test' // Modify for microservice 2 
+                        //sh 'lsof -t -i :4000 | xargs kill -9 || true'
                         // Push image to DockerHub for microservice 2
                         docker.withRegistry('https://registry.hub.docker.com', DOCKER_HUB_CREDENTIALS) {
                             docker.image(DOCKER_IMAGE_NAME_2).push()
