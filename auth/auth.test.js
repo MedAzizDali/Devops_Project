@@ -22,7 +22,7 @@ describe('Authentication Service', () => {
     chai
       .request(app)
       .post('/auth')
-      .send({ email: 'invalid@example.org' })
+      .send({ email: 'invalid@invalid.org' })
       .end((err, res) => {
         expect(res).to.have.status(401); // Assuming a different status code for invalid domain
         expect(res.body.authenticated).to.be.false;
