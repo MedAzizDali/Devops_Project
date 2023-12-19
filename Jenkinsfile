@@ -3,73 +3,68 @@ pipeline {
     
     environment {
         // Global variables initialization
-        DOCKER_IMAGE_NAME = "azizdali/devops_project:index" // Change this to your DockerHub repository/tag
-        DOCKER_HUB_CREDENTIALS = 'docker-hub-credentials' // Replace with your Jenkins credentials ID
+        DOCKER_HUB_CREDENTIALS = 'docker-hub-credentials' 
     }
 
     triggers {
-        pollSCM('*/5 * * * *') // Vérifier toutes les 5 minutes
+        pollSCM('*/5 * * * *') // Check every 5 minutes
     }
 
-    
-    
     stages {
 
-        stage('Checkout'){
+        stage('Checkout') {
             agent any
-            steps{
+            steps {
                 checkout scm
-            }   
+            }
         }
 
-        stage('Initialize') {
+        stage('Build and Test Microservice 1') {
             steps {
-                echo 'Initializing...'
-                
-            }
-        }
-        
-        stage('Build') {
-            steps {
-                // Build Docker image
-                script {
-                    docker.build(DOCKER_IMAGE_NAME, '-f Dockerfile .')
-                }
-            }
-        }
-        
-        stage('Test') {
-            steps {
-                // Placeholder for testing steps (unit or integration)
-                echo 'Running tests...'
-                
-            }
-        }
-        
-        stage('Push to DockerHub') {
-            steps {
-                // Push image to DockerHub
-                script {
-                    docker.withRegistry('https://registry.hub.docker.com', DOCKER_HUB_CREDENTIALS) {
-                        docker.image(DOCKER_IMAGE_NAME).push()
+                dir('.') {
+                    script {
+                        // Build Docker image for index.js
+                        def DOCKER_IMAGE_NAME_1 = "azizdali/devops_project:index" // Modify image name
+                        docker.build(DOCKER_IMAGE_NAME_1, '-f Dockerfile .')
+                        // Run tests for microservice 1
+                        sh 'npm install' // Modify for microservice 1
+                        sh 'npm test' // Modify for microservice 1
+                        // Push image to DockerHub for microservice 1
+                        docker.withRegistry('https://registry.hub.docker.com', DOCKER_HUB_CREDENTIALS) {
+                            docker.image(DOCKER_IMAGE_NAME_1).push()
+                        }
+                        // Clean up for microservice 1
+                        docker.image(DOCKER_IMAGE_NAME_1).remove()
                     }
                 }
             }
         }
-        
-        stage('Cleanup') {
+
+        stage('Build and Test Microservice 2') {
             steps {
-                // Clean up - remove local Docker image
-                script {
-                    docker.image(DOCKER_IMAGE_NAME).remove()
+                dir('auth') {
+                    script {
+                        // Build Docker image for auth.js
+                        def DOCKER_IMAGE_NAME_2 = "azizdali/devops_project:auth" // Modify image name
+                        docker.build(DOCKER_IMAGE_NAME_2, '-f Dockerfile .')
+                        // Run tests for microservice 2
+                        sh 'npm install' // Modify for microservice 2
+                        sh 'npm test' // Modify for microservice 2
+                        // Push image to DockerHub for microservice 2
+                        docker.withRegistry('https://registry.hub.docker.com', DOCKER_HUB_CREDENTIALS) {
+                            docker.image(DOCKER_IMAGE_NAME_2).push()
+                        }
+                        // Clean up for microservice 2
+                        docker.image(DOCKER_IMAGE_NAME_2).remove()
+                    }
                 }
             }
         }
     }
-    
+
     post {
         success {
-            echo 'Pipeline succeeded! Image pushed to DockerHub.'
+            echo 'Pipeline succeeded! Images pushed to DockerHub.'
         }
         failure {
             echo 'Pipeline failed! Check the logs for errors.'
