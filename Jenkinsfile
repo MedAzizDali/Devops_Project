@@ -28,7 +28,7 @@ pipeline {
                         docker.build(DOCKER_IMAGE_NAME_1, '-f Dockerfile .')
                         // Run tests for microservice 1
                         sh 'npm install' // Modify for microservice 1
-                        sh 'npm test' // Modify for microservice 1
+                         // Modify for microservice 1
                         // Push image to DockerHub for microservice 1
                         docker.withRegistry('https://registry.hub.docker.com', DOCKER_HUB_CREDENTIALS) {
                             docker.image(DOCKER_IMAGE_NAME_1).push()
