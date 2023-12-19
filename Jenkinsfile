@@ -34,7 +34,8 @@ pipeline {
                             docker.image(DOCKER_IMAGE_NAME_1).push()
                         }
                         // Clean up for microservice 1
-                        docker.image(DOCKER_IMAGE_NAME_1).remove()
+                        sh "docker rmi ${DOCKER_IMAGE_NAME_1}"
+
                     }
                 }
             }
@@ -55,7 +56,7 @@ pipeline {
                             docker.image(DOCKER_IMAGE_NAME_2).push()
                         }
                         // Clean up for microservice 2
-                        docker.image(DOCKER_IMAGE_NAME_2).remove()
+                        sh "docker rmi ${DOCKER_IMAGE_NAME_2}"
                     }
                 }
             }
