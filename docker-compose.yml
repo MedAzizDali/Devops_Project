@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  microservice1:
+    image: azizdali/devops_project:index
+    ports:
+      - "3000:3000"  
+
+  microservice2:
+    image: azizdali/devops_project:auth
+    ports:
+      - "4000:4000"  

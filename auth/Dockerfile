@@ -7,10 +7,10 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 
-
-
-
 COPY auth.js ./
+
+
+RUN npm install
 
 
 EXPOSE 4000
