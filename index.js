@@ -1,10 +1,18 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const axios = require('axios');
+const { register, collectDefaultMetrics } = require('prom-client');
 
 const app = express();
 const port = 3000;
 const AUTH_SERVICE_URL = 'http://localhost:4000/auth'; // URL of the authentication service
+
+const httpRequestCounter = new register.Counter({
+  name: 'http_requests_total',
+  help: 'Total number of HTTP requests',
+  labelNames: ['method', 'path', 'status'],
+});
+
 
 app.use(bodyParser.json());
 
@@ -28,8 +36,12 @@ app.post('/users', async (req, res) => {
 });
 
 app.get('/users', (req, res) => {
+  httpRequestCounter.inc({ method: 'GET', path: '/users', status: res.statusCode });
   res.json({ users });
 });
+
+collectDefaultMetrics();
+
 
 app.listen(port, () => {
   console.log(`User Management Service running on port ${port}`);
